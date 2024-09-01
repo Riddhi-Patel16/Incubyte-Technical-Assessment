@@ -200,5 +200,68 @@ describe('Library System', () => {
   })
 
 
+    describe("View Available Books",()=>{
+
+        it('should allow a registered Library User to view available books', () => {
+            // Arrange
+            const userId = 'user1';
+            userService.registerUser(userId, 'Library User');
+          
+            const adminId = 'admin1';
+            userService.registerUser(adminId, 'Admin User', 'admin123');
+          
+            const book1: Book = {
+              id: 'book1',
+              title: 'Book Title 1',
+              author: 'Author Name 1',
+              publicationYear: 2000,
+              available: true
+            };
+          
+            const book2: Book = {
+              id: 'book2',
+              title: 'Book Title 2',
+              author: 'Author Name 2',
+              publicationYear: 2005,
+              available: false
+            };
+          
+            libraryService.addBook(book1, adminId);
+            libraryService.addBook(book2, adminId);
+          
+            // Act
+            const availableBooks = libraryService.getAvailableBooks(userId);
+          
+            // Assert
+            expect(availableBooks).toContainEqual(book1);
+            expect(availableBooks).not.toContainEqual(book2); // Ensure only available books are returned
+          });
+
+          it('should not allow an unregistered user to view available books', () => {
+            // Arrange
+            const userId = 'user1';
+          
+            // Act & Assert
+            expect(() => libraryService.getAvailableBooks(userId)).toThrow('User is not registered.');
+          });
+
+          it('should return an empty list if no books are available', () => {
+            // Arrange
+            const userId = 'user1';
+            userService.registerUser(userId, 'Library User');
+          
+            const adminId = 'admin1';
+            userService.registerUser(adminId, 'Admin User', 'admin123');
+          
+            // No books are added to the library, so none should be available
+          
+            // Act
+            const availableBooks = libraryService.getAvailableBooks(userId);
+          
+            // Assert
+            expect(availableBooks).toEqual([]); // Expect an empty array since no books are available
+          });
+          
+    })
 
 });
