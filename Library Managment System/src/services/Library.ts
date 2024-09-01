@@ -47,21 +47,25 @@ export class Library {
         this.books.set(bookId, { ...book, available: false, borrowedBy: userId });
         this.updateAvailableBooksCount();
     }
+
+
     //get book by book id
     getBookById(bookId: string): Book | undefined {
         return this.books.get(bookId);
       }
 
-  //update available books count
-  private updateAvailableBooksCount(): void {
-    this.totalAvailableBooks = Array.from(this.books.values()).filter(book => book.available).length;
-  }
 
-  getAvailableBooks(userId: string): Book[] {
-    const user = this.userService.getUserById(userId);
-    if (!user) {
-      throw new Error('User is not registered.');
+    //update available books count
+    private updateAvailableBooksCount(): void {
+        this.totalAvailableBooks = Array.from(this.books.values()).filter(book => book.available).length;
     }
-    return Array.from(this.books.values()).filter(book => book.available);
-  }
+
+    
+    getAvailableBooks(userId: string): Book[] {
+        const user = this.userService.getUserById(userId);
+        if (!user) {
+        throw new Error('User is not registered.');
+        }
+        return Array.from(this.books.values()).filter(book => book.available);
+    }
 }

@@ -123,4 +123,80 @@ describe('Library System', () => {
     });
   });
 
+  describe('Return Book Feature',(){
+
+    it('should allow a Library User to return a book they borrowed', () => {
+        // Arrange
+        const userId = 'user1';
+        userService.registerUser(userId, 'Library User');
+      
+        const adminId = 'admin1';
+        userService.registerUser(adminId, 'Admin User', 'admin123');
+      
+        const book: Book = {
+          id: 'book1',
+          title: 'Book Title',
+          author: 'Author Name',
+          publicationYear: 2000,
+          available: true
+        };
+      
+        libraryService.addBook(book, adminId);
+        libraryService.borrowBook(book.id, userId);
+      
+        // Act
+        libraryService.returnBook(book.id, userId);
+      
+        // Assert
+        const returnedBook = libraryService.getBookById(book.id);
+        expect(returnedBook?.available).toBe(true);
+        expect(returnedBook?.borrowedBy).toBeUndefined();
+      });
+
+      it('should not allow a non-registered user to return a book', () => {
+        // Arrange
+        const userId = 'user1';
+      
+        const book: Book = {
+          id: 'book1',
+          title: 'Book Title',
+          author: 'Author Name',
+          publicationYear: 2000,
+          available: true
+        };
+      
+        // Act & Assert
+        expect(() => libraryService.returnBook(book.id, userId)).toThrow('User is not registered.');
+      });
+      
+      it('should not allow a non-Library User to return a book', () => {
+        // Arrange
+        const adminId = 'admin1';
+        userService.registerUser(adminId, 'Admin User', 'admin123');
+      
+        const book: Book = {
+          id: 'book1',
+          title: 'Book Title',
+          author: 'Author Name',
+          publicationYear: 2000,
+          available: true
+        };
+      
+        libraryService.addBook(book, adminId);
+      
+        // Act & Assert
+        expect(() => libraryService.returnBook(book.id, adminId)).toThrow('Only Library Users can return books.');
+      });
+
+      it('should not allow returning a book that does not exist', () => {
+        // Arrange
+        const userId = 'user1';
+        userService.registerUser(userId, 'Library User');
+      
+        // Act & Assert
+        expect(() => libraryService.returnBook('nonexistentBookId', userId)).toThrow('Book not found.');
+      });    
+  })
+
+
 });
