@@ -73,4 +73,53 @@ describe('Library System', () => {
     });
   })
 
+  describe('BorrowBook Feature', () => {
+  
+    it('should throw an error if the user is not registered', () => {
+      const userId = 'unknownUser';
+      const bookId = 'book1';
+  
+      expect(() => libraryService.borrowBook(bookId, userId)).toThrowError('User is not registered.');
+    });
+  
+    it('should throw an error if the book is not found', () => {
+      const userId = 'user1';
+      userService.registerUser(userId, 'Library User');
+  
+      const bookId = 'unknownBook';
+  
+      expect(() => libraryService.borrowBook(bookId, userId)).toThrowError('Book not found.');
+    });
+  
+    it('should throw an error if the book is not available', () => {
+      const userId = 'user1';
+      userService.registerUser(userId, 'Library User');
+  
+      const adminId = 'admin1';
+      userService.registerUser(adminId, 'Admin User', 'admin123');
+  
+      const book: Book = { id: 'book1', title: 'Book Title', author: 'Author Name', publicationYear: 2000, available: false };
+      libraryService.addBook(book, adminId);
+  
+      expect(() => libraryService.borrowBook(book.id, userId)).toThrowError('Book is not available.');
+    });
+  
+    it('should allow a Library User to borrow an available book', () => {
+      const userId = 'user1';
+      userService.registerUser(userId, 'Library User');
+  
+      const adminId = 'admin1';
+      userService.registerUser(adminId, 'Admin User', 'admin123');
+  
+      const book: Book = { id: 'book1', title: 'Book Title', author: 'Author Name', publicationYear: 2000, available: true };
+      libraryService.addBook(book, adminId);
+  
+      libraryService.borrowBook(book.id, userId);
+  
+      const borrowedBook = libraryService.getAvailableBooks(userId).find(b => b.id === book.id);
+      expect(borrowedBook?.available).toBe(false);
+      expect(borrowedBook?.borrowedBy).toBe(userId);
+    });
+  });
+
 });
