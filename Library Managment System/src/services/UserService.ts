@@ -1,13 +1,8 @@
-export interface User {
-    id: string;
-    name: string;
-    role: 'Admin' | 'LibraryUser';
-  }
+import { User } from "../models/User";
   
-
 export class UserService {
- users: Map<string, User> = new Map();
-   adminKey = 'admin123'; // Example admin key
+    private users: Map<string, User> = new Map();
+    private adminKey = 'admin123'; // Example admin key
 
   // Register user and determine role based on adminKey
   registerUser(id: string, name: string, providedAdminKey?: string): User {
@@ -42,6 +37,6 @@ export class UserService {
   getUserById(userId: string): User | undefined {
     return this.users.get(userId);
   }
-  
+
 }
 
