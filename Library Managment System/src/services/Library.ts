@@ -31,4 +31,12 @@ export class Library {
   private updateAvailableBooksCount(): void {
     this.totalAvailableBooks = Array.from(this.books.values()).filter(book => book.available).length;
   }
+
+  getAvailableBooks(userId: string): Book[] {
+    const user = this.userService.getUserById(userId);
+    if (!user) {
+      throw new Error('User is not registered.');
+    }
+    return Array.from(this.books.values()).filter(book => book.available);
+  }
 }

@@ -30,7 +30,7 @@ describe('Library System', () => {
         libraryService.addBook(book, adminId);
 
         // Assert
-        const availableBooks = libraryService.getAvailableBooks();
+        const availableBooks = libraryService.getAvailableBooks(adminId);
         expect(availableBooks).toContainEqual(book);
     });
 
