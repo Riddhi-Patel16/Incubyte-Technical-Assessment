@@ -46,7 +46,7 @@ The Library Management System is a simple TypeScript-based application created a
 
 After running the tests, The detailed test report screenshot in src/Test images folder. 
 
-https://github.com/user-attachments/assets/dc992fc3-659e-4a45-8e28-7d9a9e5e6f59
+![Complete Test Report](https://github.com/user-attachments/assets/89be57ba-0b96-461f-85ec-874577a77699)
 
 
 
