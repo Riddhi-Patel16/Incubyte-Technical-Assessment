@@ -49,6 +49,26 @@ export class Library {
     }
 
 
+    // Return a book - only for LibraryUsers who are registered and borrow book they allow
+  returnBook(bookId: string, userId: string): void {
+    const user = this.userService.getUserById(userId);
+    if (!user) {
+      throw new Error('User is not registered.');
+    }
+    if (user.role !== 'LibraryUser') {
+      throw new Error('Only Library Users can return books.');
+    }
+    if (!this.books.has(bookId)) {
+      throw new Error('Book not found.');
+    }
+    const book = this.books.get(bookId)!;
+    if (book.borrowedBy !== userId) {
+      throw new Error('This book was not borrowed by you.');
+    }
+    this.books.set(bookId, { ...book, available: true, borrowedBy: undefined });
+    this.updateAvailableBooksCount();
+  }
+
     //get book by book id
     getBookById(bookId: string): Book | undefined {
         return this.books.get(bookId);
@@ -60,7 +80,7 @@ export class Library {
         this.totalAvailableBooks = Array.from(this.books.values()).filter(book => book.available).length;
     }
 
-    
+
     getAvailableBooks(userId: string): Book[] {
         const user = this.userService.getUserById(userId);
         if (!user) {
