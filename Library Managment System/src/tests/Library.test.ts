@@ -79,7 +79,7 @@ describe('Library System', () => {
       const userId = 'unknownUser';
       const bookId = 'book1';
   
-      expect(() => libraryService.borrowBook(bookId, userId)).toThrowError('User is not registered.');
+      expect(() => libraryService.borrowBook(bookId, userId)).toThrow('User is not registered.');
     });
   
     it('should throw an error if the book is not found', () => {
@@ -88,7 +88,7 @@ describe('Library System', () => {
   
       const bookId = 'unknownBook';
   
-      expect(() => libraryService.borrowBook(bookId, userId)).toThrowError('Book not found.');
+      expect(() => libraryService.borrowBook(bookId, userId)).toThrow('Book not found.');
     });
   
     it('should throw an error if the book is not available', () => {
@@ -100,8 +100,8 @@ describe('Library System', () => {
   
       const book: Book = { id: 'book1', title: 'Book Title', author: 'Author Name', publicationYear: 2000, available: false };
       libraryService.addBook(book, adminId);
-  
-      expect(() => libraryService.borrowBook(book.id, userId)).toThrowError('Book is not available.');
+      libraryService.borrowBook(book.id, userId);
+      expect(() => libraryService.borrowBook(book.id, userId)).toThrow('Book is not available.');
     });
   
     it('should allow a Library User to borrow an available book', () => {
@@ -116,7 +116,8 @@ describe('Library System', () => {
   
       libraryService.borrowBook(book.id, userId);
   
-      const borrowedBook = libraryService.getAvailableBooks(userId).find(b => b.id === book.id);
+      // Retrieve the borrowed book directly
+      const borrowedBook = libraryService.getBookById(book.id);
       expect(borrowedBook?.available).toBe(false);
       expect(borrowedBook?.borrowedBy).toBe(userId);
     });

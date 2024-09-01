@@ -27,6 +27,30 @@ export class Library {
     this.updateAvailableBooksCount();
   }
 
+
+  // Borrow a book - only for LibraryUsers who are registered
+    borrowBook(bookId: string, userId: string): void {
+        const user = this.userService.getUserById(userId);
+        if (!user) {
+          throw new Error('User is not registered.');
+        }
+        if (user.role !== 'LibraryUser') {
+          throw new Error('Only Library Users can borrow books.');
+        }
+        if (!this.books.has(bookId)) {
+          throw new Error('Book not found.');
+        }
+        const book = this.books.get(bookId)!;
+        if (!book.available) {
+          throw new Error('Book is not available.');
+        }
+        this.books.set(bookId, { ...book, available: false, borrowedBy: userId });
+        this.updateAvailableBooksCount();
+    }
+    getBookById(bookId: string): Book | undefined {
+        return this.books.get(bookId);
+      }
+
   //update available books count
   private updateAvailableBooksCount(): void {
     this.totalAvailableBooks = Array.from(this.books.values()).filter(book => book.available).length;
