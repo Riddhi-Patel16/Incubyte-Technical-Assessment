@@ -47,6 +47,7 @@ export class Library {
         this.books.set(bookId, { ...book, available: false, borrowedBy: userId });
         this.updateAvailableBooksCount();
     }
+    //get book by book id
     getBookById(bookId: string): Book | undefined {
         return this.books.get(bookId);
       }
