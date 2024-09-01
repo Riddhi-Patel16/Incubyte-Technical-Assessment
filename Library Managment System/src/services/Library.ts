@@ -80,12 +80,20 @@ export class Library {
         this.totalAvailableBooks = Array.from(this.books.values()).filter(book => book.available).length;
     }
 
-
+    // View All available books Feature
     getAvailableBooks(userId: string): Book[] {
         const user = this.userService.getUserById(userId);
         if (!user) {
         throw new Error('User is not registered.');
         }
         return Array.from(this.books.values()).filter(book => book.available);
+    }
+
+    //Search Feature Get  details for a book
+    getBookDetails(bookId: string): Book {
+        if (!this.books.has(bookId)) {
+        throw new Error('Book not found.');
+        }
+        return this.books.get(bookId)!;
     }
 }

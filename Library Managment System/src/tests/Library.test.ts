@@ -260,8 +260,35 @@ describe('Library System', () => {
           
             // Assert
             expect(availableBooks).toEqual([]); // Expect an empty array since no books are available
+          });  
+    })
+
+    describe('Search Feature',()=>{
+        test('should return book details for a valid book ID', () => {
+            // Arrange
+            const adminId = 'admin1';
+            userService.registerUser(adminId, 'Admin User', 'admin123');
+        
+            const book: Book = {
+              id: 'book1',
+              title: 'Clean Code',
+              author: 'Robert C. Martin',
+              publicationYear: 2008,
+              available: true,
+            };
+            libraryService.addBook(book, adminId);
+        
+            // Act
+            const result = libraryService.getBookDetails(book.id);
+        
+            // Assert
+            expect(result).toEqual(book);
           });
-          
+        
+          test('should throw an error if the book does not exist', () => {
+            // Act & Assert
+            expect(() => libraryService.getBookDetails('nonExistentBook')).toThrow('Book not found.');
+          });
     })
 
 });
