@@ -20,6 +20,18 @@ export class Library {
     if (user.role !== 'Admin') {
       throw new Error('Only Admins can add books.');
     }
+    if(book.id.length!=13)
+    {
+      throw new Error('ISBN Length must be 13');
+    }
+    for(let i=0;i<13;i++)
+    {
+      if( i>=0 && i<=3 && !((book.id[i]>='a' && book.id[i]<='z') || (book.id[i]>='A' && book.id[i]<='Z')))
+        throw new Error('ISBN number is not in valid format');
+      if( i>=4 && i<13 && !(book.id[i]>='0' && book.id[i]<='9'))
+        throw new Error('ISBN number is not in valid format');
+
+    }
     if (this.books.has(book.id)) {
       throw new Error('Book with this ID already exists.');
     }

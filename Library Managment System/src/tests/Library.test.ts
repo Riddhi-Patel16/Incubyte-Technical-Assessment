@@ -19,7 +19,7 @@ describe('Library System', () => {
         userService.registerUser(adminId, adminName, 'admin123');
 
         const book: Book = {
-        id: 'book1',
+        id: 'book567891234',
         title: 'Book Title',
         author: 'Author Name',
         publicationYear: 2000,
@@ -41,7 +41,7 @@ describe('Library System', () => {
         userService.registerUser(libraryUserId, libraryUserName);
 
         const book: Book = {
-        id: 'book2',
+        id: 'book567891234',
         title: 'Another Book Title',
         author: 'Another Author',
         publicationYear: 2021,
@@ -59,7 +59,7 @@ describe('Library System', () => {
         userService.registerUser(adminId, adminName, 'admin123');
 
         const book: Book = {
-        id: 'book3',
+        id: 'book567891234',
         title: 'Third Book Title',
         author: 'Third Author',
         publicationYear: 2015,
@@ -71,6 +71,61 @@ describe('Library System', () => {
         // Act & Assert
         expect(() => libraryService.addBook(book, adminId)).toThrow('Book with this ID already exists.');
     });
+
+    test('should not allow adding a book in which ISBN number length is not 13', () => {
+      // Arrange
+      const adminId = 'admin2';
+      const adminName = 'Another Admin';
+      userService.registerUser(adminId, adminName, 'admin123');
+
+      const book: Book = {
+      id: 'book567891234',
+      title: 'Third Book Title',
+      author: 'Third Author',
+      publicationYear: 2015,
+      available: true
+      };
+
+      libraryService.addBook(book, adminId); // First addition should succeed
+      const book2: Book = {
+        id: '1234561123',
+        title: 'Third Book Title',
+        author: 'Third Author',
+        publicationYear: 2015,
+        available: true
+        };
+
+      // Act & Assert
+      expect(() => libraryService.addBook(book2, adminId)).toThrow('ISBN Length must be 13');
+    });
+  
+    test('should not allow adding a book in which ISBN number not in valid format', () => {
+      // Arrange
+      const adminId = 'admin2';
+      const adminName = 'Another Admin';
+      userService.registerUser(adminId, adminName, 'admin123');
+
+      const book: Book = {
+      id: 'book567891234',
+      title: 'Third Book Title',
+      author: 'Third Author',
+      publicationYear: 2015,
+      available: true
+      };
+
+      libraryService.addBook(book, adminId); // First addition should succeed
+      const book2: Book = {
+        id: '1234561123123',
+        title: 'Third Book Title',
+        author: 'Third Author',
+        publicationYear: 2015,
+        available: true
+        };
+
+      // Act & Assert
+      expect(() => libraryService.addBook(book2, adminId)).toThrow('ISBN number is not in valid format');
+    });
+
   })
 
   describe('BorrowBook Feature', () => {
@@ -86,7 +141,7 @@ describe('Library System', () => {
       const userId = 'user1';
       userService.registerUser(userId, 'Library User');
   
-      const bookId = 'unknownBook';
+      const bookId = 'book567891234';
   
       expect(() => libraryService.borrowBook(bookId, userId)).toThrow('Book not found.');
     });
@@ -98,7 +153,7 @@ describe('Library System', () => {
       const adminId = 'admin1';
       userService.registerUser(adminId, 'Admin User', 'admin123');
   
-      const book: Book = { id: 'book1', title: 'Book Title', author: 'Author Name', publicationYear: 2000, available: false };
+      const book: Book = { id: 'book567891234', title: 'Book Title', author: 'Author Name', publicationYear: 2000, available: false };
       libraryService.addBook(book, adminId);
       libraryService.borrowBook(book.id, userId);
       expect(() => libraryService.borrowBook(book.id, userId)).toThrow('Book is not available.');
@@ -111,7 +166,7 @@ describe('Library System', () => {
       const adminId = 'admin1';
       userService.registerUser(adminId, 'Admin User', 'admin123');
   
-      const book: Book = { id: 'book1', title: 'Book Title', author: 'Author Name', publicationYear: 2000, available: true };
+      const book: Book = { id: 'book567891234', title: 'Book Title', author: 'Author Name', publicationYear: 2000, available: true };
       libraryService.addBook(book, adminId);
   
       libraryService.borrowBook(book.id, userId);
@@ -135,7 +190,7 @@ describe('Library System', () => {
         userService.registerUser(adminId, 'Admin User', 'admin123');
       
         const book: Book = {
-          id: 'book1',
+          id: 'book567891234',
           title: 'Book Title',
           author: 'Author Name',
           publicationYear: 2000,
@@ -159,7 +214,7 @@ describe('Library System', () => {
         const userId = 'user1';
       
         const book: Book = {
-          id: 'book1',
+          id: 'book567891234',
           title: 'Book Title',
           author: 'Author Name',
           publicationYear: 2000,
@@ -176,7 +231,7 @@ describe('Library System', () => {
         userService.registerUser(adminId, 'Admin User', 'admin123');
       
         const book: Book = {
-          id: 'book1',
+          id: 'book567891234',
           title: 'Book Title',
           author: 'Author Name',
           publicationYear: 2000,
@@ -195,7 +250,7 @@ describe('Library System', () => {
         userService.registerUser(userId, 'Library User');
       
         // Act & Assert
-        expect(() => libraryService.returnBook('nonexistentBookId', userId)).toThrow('Book not found.');
+        expect(() => libraryService.returnBook('book567891234', userId)).toThrow('Book not found.');
       });    
   })
 
@@ -211,7 +266,7 @@ describe('Library System', () => {
             userService.registerUser(adminId, 'Admin User', 'admin123');
           
             const book1: Book = {
-              id: 'book1',
+              id: 'book567891234',
               title: 'Book Title 1',
               author: 'Author Name 1',
               publicationYear: 2000,
@@ -219,7 +274,7 @@ describe('Library System', () => {
             };
           
             const book2: Book = {
-              id: 'book2',
+              id: 'book567891235',
               title: 'Book Title 2',
               author: 'Author Name 2',
               publicationYear: 2005,
@@ -271,7 +326,7 @@ describe('Library System', () => {
             userService.registerUser(adminId, 'Admin User', 'admin123');
         
             const book: Book = {
-              id: 'book1',
+              id: 'book567891234',
               title: 'Clean Code',
               author: 'Robert C. Martin',
               publicationYear: 2008,
@@ -288,7 +343,7 @@ describe('Library System', () => {
         
           test('should throw an error if the book does not exist', () => {
             // Act & Assert
-            expect(() => libraryService.getBookDetails('nonExistentBook')).toThrow('Book not found.');
+            expect(() => libraryService.getBookDetails('book567891234')).toThrow('Book not found.');
           });
     })
 
